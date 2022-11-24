@@ -54,4 +54,4 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \ 
-        ./domain-expiration-build.zip s3://devops-gunwoo.lee-bucket/
+        s3://devops-gunwoo.lee-bucket/ ./domain-expiration-build.zip 
