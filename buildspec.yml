@@ -1,4 +1,4 @@
 artifacts:
   files:
-    - target/domain-expiration-0.0.1-SNAPSHOT.jar
+    - build/libs/domain-expiration-0.0.1-SNAPSHOT.jar
     - appspec.yml
