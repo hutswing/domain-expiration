@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title Domain 만료일자 확인 API
+
+skinparam responseMessageBelowArrow true
+
+participant FrontEnd as User
+participant DomainController as Controller
+participant DomainService as Service
+participant WhoisAPI
+participant ApacheWebCommon
+
+User --> Controller : GET: /domain/expiration\nex: {domainName : naver.com}
+Controller --> Service : getDomainExpiration()
+
+
+alt .kr or 한글 도메인
+    Service -> WhoisAPI : http://whois.kisa.or.kr/openapi/whois.jsp
+    WhoisAPI --> Service : domain 만료일자 반환
+else 그밖에 도메인
+    Service -> ApacheWebCommon : whois.query()
+    ApacheWebCommon --> Service : Domain 정보 반환
+end
+
+Service --> Controller : domain 만료일자 반환
+Controller --> User : domain 만료일자 반환
+
+@enduml

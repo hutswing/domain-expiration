@@ -1,0 +1,56 @@
+@startuml Basic Usage - AWS IoT Rules Engine
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v11.1/dist
+!includeurl AWSPuml/AWSCommon.puml
+!includeurl AWSPuml/InternetOfThings/IoTRule.puml
+!includeurl AWSPuml/Analytics/KinesisDataStreams.puml
+!includeurl AWSPuml/ApplicationIntegration/SimpleQueueService.puml
+!includeurl AWSPuml/Storage/SimpleStorageService.puml
+!includeurl AWSPuml/General/Users.puml
+!include AWSPuml/Compute/EC2.puml
+!include AWSPuml/Compute/EC2Instance.puml
+
+node "EC2 Instance(AWS)" {
+    '### SimpleStorageService(s3, "S3", "외부메타", "")
+    '### EC2Instance(ec2, "EC2", "")
+
+    SimpleStorageService(s3, "S3", "배포 파일", "")
+
+    package "Monitoring" {
+        archimate #Technology "grafana" as grafana <<technology-device>>
+        archimate #Technology "prometheus" as prometheus <<technology-device>>
+    }
+
+    package "Application" {
+
+        archimate #Technology "domain-expiration" as applicaion <<technology-device>>
+    }
+
+
+}
+
+node "GitHub" {
+
+   package "GitHub Action" {
+        archimate #Technology "github action" as action <<technology-device>>
+   }
+
+   package "GitHub Repositoty" {
+        archimate #Technology "github repository" as repository <<technology-device>>
+    }
+
+}
+
+node "개발환경(local)" {
+    package "IntelliJ" {
+        archimate #Technology "domain-expiration" as local <<technology-device>>
+    }
+}
+
+local =right=> repository #blue : 1. git push
+repository =right=> action #blue : 2. github action\nbuild(CI)
+action =left=> s3 #blue : 3. github action deploy(CD)
+s3 =left=> applicaion : 4. aws codedeploy 배포
+applicaion -left-> prometheus : spring actuator\n정보수집
+prometheus -left-> grafana : prometheus\n정보 대시보드
+
+@enduml
