@@ -5,5 +5,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,beans,conditions, prometheus
-        exclude: threaddump, heapdump
+        include: '*'
